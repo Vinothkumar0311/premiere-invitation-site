@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Suspense, useState } from "react";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import { siteContentQuery, timelineQuery, galleryQuery } from "@/lib/site-data";
 import { LoadingScreen } from "@/components/loading-screen";
 import { IntroScreen } from "@/components/intro-screen";
@@ -23,11 +24,20 @@ export const Route = createFileRoute("/")({
 });
 
 function Index() {
-  const [opened, setOpened] = useState(false);
   return (
     <Suspense fallback={<LoadingScreen />}>
-      {!opened && <IntroScreen brideName="Aaradhya" groomName="Arjun" onOpen={() => setOpened(true)} />}
-      <Invitation opened={opened} />
+      <InvitationGate />
     </Suspense>
+  );
+}
+
+function InvitationGate() {
+  const [opened, setOpened] = useState(false);
+  const { data: site } = useSuspenseQuery(siteContentQuery);
+  return (
+    <>
+      {!opened && <IntroScreen brideName={site.bride_name} groomName={site.groom_name} onOpen={() => setOpened(true)} />}
+      <Invitation opened={opened} />
+    </>
   );
 }
