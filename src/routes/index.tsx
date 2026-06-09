@@ -1,29 +1,43 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { Suspense, useState } from "react";
+import { useSuspenseQuery } from "@tanstack/react-query";
+import { siteContentQuery, timelineQuery, galleryQuery } from "@/lib/site-data";
+import { LoadingScreen } from "@/components/loading-screen";
+import { IntroScreen } from "@/components/intro-screen";
+import { Invitation } from "@/components/invitation";
 
 export const Route = createFileRoute("/")({
+  loader: ({ context }) => {
+    context.queryClient.ensureQueryData(siteContentQuery);
+    context.queryClient.ensureQueryData(timelineQuery);
+    context.queryClient.ensureQueryData(galleryQuery);
+  },
   head: () => ({
     meta: [
-      { title: "Your App" },
-      { name: "description", content: "Replace this with a one-sentence description of your app." },
-      { property: "og:title", content: "Your App" },
-      { property: "og:description", content: "Replace this with a one-sentence description of your app." },
+      { title: "Aaradhya & Arjun — Wedding Invitation" },
+      { name: "description", content: "Join us as we celebrate our wedding on December 15, 2026 at The Leela Palace, Udaipur." },
+      { property: "og:title", content: "Aaradhya & Arjun — Wedding Invitation" },
+      { property: "og:description", content: "December 15, 2026 · The Leela Palace, Udaipur" },
     ],
   }),
   component: Index,
 });
 
-// IMPORTANT: Replace this placeholder. See ./README.md for routing conventions.
 function Index() {
   return (
-    <div
-      className="flex min-h-screen items-center justify-center"
-      style={{ backgroundColor: "#fcfbf8" }}
-    >
-      <img
-        data-lovable-blank-page-placeholder="REMOVE_THIS"
-        src="https://cdn.gpteng.co/blank-app-v1.svg"
-        alt="Your app will live here!"
-      />
-    </div>
+    <Suspense fallback={<LoadingScreen />}>
+      <InvitationGate />
+    </Suspense>
+  );
+}
+
+function InvitationGate() {
+  const [opened, setOpened] = useState(false);
+  const { data: site } = useSuspenseQuery(siteContentQuery);
+  return (
+    <>
+      {!opened && <IntroScreen brideName={site.bride_name} groomName={site.groom_name} onOpen={() => setOpened(true)} />}
+      <Invitation opened={opened} />
+    </>
   );
 }
