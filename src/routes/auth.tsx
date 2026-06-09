@@ -30,8 +30,7 @@ function AuthPage() {
         });
         if (error) throw error;
         if (data.user) {
-          // Try claim admin if no admin exists yet (first user). Will silently fail otherwise.
-          await supabase.rpc("claim_admin").catch(() => {});
+          try { await (supabase.rpc as any)("claim_admin"); } catch {}
           toast.success("Account created. Signing in...");
           navigate({ to: "/admin" });
         }
