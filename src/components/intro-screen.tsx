@@ -23,7 +23,7 @@ export function IntroScreen({ brideName, groomName, onOpen }: Props) {
 
   return (
     <AnimatePresence>
-      {stage !== "revealed" || true ? (
+      {stage !== "revealed" && (
         <motion.div
           initial={{ opacity: 1 }}
           animate={{ opacity: stage === "revealed" ? 0 : 1 }}
