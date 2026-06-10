@@ -1,5 +1,5 @@
 import { motion, AnimatePresence } from "framer-motion";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ornament from "@/assets/ornament.png";
 import { getGuestName } from "@/lib/personalize";
 
@@ -11,7 +11,8 @@ interface Props {
 
 export function IntroScreen({ brideName, groomName, onOpen }: Props) {
   const [stage, setStage] = useState<"closed" | "opening" | "revealed">("closed");
-  const guestName = getGuestName();
+  const [guestName, setGuestName] = useState("");
+  useEffect(() => { setGuestName(getGuestName()); }, []);
 
   const handleOpen = () => {
     if (stage !== "closed") return;
