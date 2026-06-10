@@ -1,5 +1,5 @@
 import { motion, AnimatePresence } from "framer-motion";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ornament from "@/assets/ornament.png";
 import { getGuestName } from "@/lib/personalize";
 
@@ -11,7 +11,8 @@ interface Props {
 
 export function IntroScreen({ brideName, groomName, onOpen }: Props) {
   const [stage, setStage] = useState<"closed" | "opening" | "revealed">("closed");
-  const guestName = getGuestName();
+  const [guestName, setGuestName] = useState("");
+  useEffect(() => { setGuestName(getGuestName()); }, []);
 
   const handleOpen = () => {
     if (stage !== "closed") return;
@@ -22,17 +23,12 @@ export function IntroScreen({ brideName, groomName, onOpen }: Props) {
 
   return (
     <AnimatePresence>
-      {stage !== "revealed" || true ? (
+      {stage !== "revealed" && (
         <motion.div
           initial={{ opacity: 1 }}
-          animate={{ opacity: stage === "revealed" ? 0 : 1 }}
+          animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          transition={{ duration: 1, delay: stage === "revealed" ? 1.6 : 0 }}
-          onAnimationComplete={() => {
-            if (stage === "revealed") {
-              // handled by setTimeout
-            }
-          }}
+          transition={{ duration: 1 }}
           className="fixed inset-0 z-50 flex flex-col items-center justify-center overflow-hidden px-6"
           style={{
             background:
@@ -190,7 +186,7 @@ export function IntroScreen({ brideName, groomName, onOpen }: Props) {
             Tap the envelope to open
           </motion.p>
         </motion.div>
-      ) : null}
+      )}
     </AnimatePresence>
   );
 }
