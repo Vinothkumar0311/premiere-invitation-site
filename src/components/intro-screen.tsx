@@ -191,7 +191,7 @@ export function IntroScreen({ brideName, groomName, onOpen }: Props) {
             Tap the envelope to open
           </motion.p>
         </motion.div>
-      ) : null}
+      )}
     </AnimatePresence>
   );
 }
