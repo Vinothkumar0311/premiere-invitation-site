@@ -26,14 +26,9 @@ export function IntroScreen({ brideName, groomName, onOpen }: Props) {
       {stage !== "revealed" && (
         <motion.div
           initial={{ opacity: 1 }}
-          animate={{ opacity: stage === "revealed" ? 0 : 1 }}
+          animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          transition={{ duration: 1, delay: stage === "revealed" ? 1.6 : 0 }}
-          onAnimationComplete={() => {
-            if (stage === "revealed") {
-              // handled by setTimeout
-            }
-          }}
+          transition={{ duration: 1 }}
           className="fixed inset-0 z-50 flex flex-col items-center justify-center overflow-hidden px-6"
           style={{
             background:
